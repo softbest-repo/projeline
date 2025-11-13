@@ -98,8 +98,64 @@
 				<img style="padding-bottom:10px; padding-right:20px;" src="<?php echo $configUrl;?>f/i/quebrado/logo-pagseguro.png" alt="Bandeiras" width="150"/>
 				<img src="<?php echo $configUrl;?>f/i/quebrado/bancos.png" alt="Bandeiras" width="200"/>
 			</p>
-			<p class="msg-confirmar">Ao continuar, você será redirecionado para o PagSeguro para finalizar o pagamento.</p>
-			<p class="continuar"><a href="<?php echo $configUrl;?>carrinho/pagamento/">Continuar para Pagamento</a></p>
+
+
+		<div class="termos-container">
+			<div id="termos">
+<?php
+				$sqlTermos = "SELECT * FROM termos LIMIT 1";
+				$resultTermo = $conn->query($sqlTermos);
+
+				if ($resultTermo && $resultTermo->num_rows > 0) {
+					$dadosTermo = $resultTermo->fetch_assoc();
+?>
+					<h3><?php echo $dadosTermo['nomeTermo']; ?></h3>
+					<p><?php echo nl2br($dadosTermo['descricaoTermo']); ?></p>
+<?php
+				} else {
+					echo "<p>Nenhum termo encontrado.</p>";
+				}
+?>
+			</div>
+
+			<div style="margin-top:15px; text-align: center;">
+				<input type="checkbox" id="aceitoTermos">
+				<label for="aceitoTermos">Ao continuar, você declara estar de acordo com os
+					<a href="#" target="_blank">termos e condições de garantia</a>.
+				</label>
+			</div>
+		</div>
+
+		<p class="msg-confirmar">Ao continuar, você será redirecionado para o PagSeguro para finalizar o pagamento.</p>
+		<p class="continuar">
+			<a id="botaoContinuar" href="<?php echo $configUrl; ?>carrinho/pagamento/" style="pointer-events:none; opacity:0.5;">Continuar para Pagamento</a>
+		</p>
+  		<p id="msgAviso" style="text-align: center;" class="msg-aviso">⚠️ Você deve aceitar os termos antes de continuar.</p>
+		<script>
+			const checkbox = document.getElementById('aceitoTermos');
+			const botao = document.getElementById('botaoContinuar');
+			const msgAviso = document.getElementById('msgAviso');
+
+			checkbox.addEventListener('change', () => {
+				if (checkbox.checked) {
+				botao.style.pointerEvents = 'auto';
+				botao.style.opacity = '1';
+				msgAviso.style.display = 'none';
+				} else {
+				botao.style.pointerEvents = 'none';
+				botao.style.opacity = '0.5';
+				}
+			});
+
+			botao.addEventListener('click', (e) => {
+				if (!checkbox.checked) {
+				e.preventDefault();
+				msgAviso.style.display = 'block';
+				}
+			});
+		</script>
+
+
 		</div>
 	</div>
 <?php
@@ -110,3 +166,12 @@
 		echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=".$configUrl."minha-conta/login/'>";		
 	}
 ?>
+
+<style>
+	.termos-container { background: #f8f8f8; border: 1px solid #ddd; padding: 20px; border-radius: 10px; margin: 20px 0; color: #333;}
+	.termos-container h3 { color: #b07d02; margin-bottom: 10px; text-align: center; }
+	.termos-container p { line-height: 1.6; font-size: 14px; text-align: justify; }
+	.termos-container a { color: #b07d02; text-decoration: none; font-weight: 600; }
+	.termos-container a:hover { text-decoration: underline; } 
+	.termos-container input[type="checkbox"] {accent-color: #001242; transform: scale(1.2); margin-right: 8px;  vertical-align: middle;}
+</style>

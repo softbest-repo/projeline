@@ -55,12 +55,18 @@
 
 					$descricao = str_replace("../../../../", $configUrlGer, $_POST['descricao']);
 																						
-					$sql = "UPDATE termos SET nomeTermo = '".preparaNome($_POST['nome'])."', descricaoTermo = '".str_replace("'", "&#39;", $descricao)."', urlTermo = '".$urlTermo."' WHERE codTermo = '".$url[6]."'";
+				 	$sql = "UPDATE termos SET nomeTermo = '".preparaNome($_POST['nome'])."', descricaoTermo = '".str_replace("'", "&#39;", $descricao)."', urlTermo = '".$urlTermo."' WHERE codTermo = '".$url[6]."'";
 					$result = $conn->query($sql); 
 					
 					if($result == 1){
 						$_SESSION['nome'] = $_POST['nome'];
 						$_SESSION['alteracao'] = "ok";
+						$sql = "SELECT * FROM termos WHERE codTermo = ".$url[6];
+						$result = $conn->query($sql);
+						$dadosTermo = $result->fetch_assoc();
+						$_SESSION['nome'] = $dadosTermo['nomeTermo'];
+						$_SESSION['descricao'] = $dadosTermo['descricaoTermo'];
+						$_SESSION['status'] = $dadosTermo['statusTermo'];
 					}else{
 						$erroData = "<p class='erro'>Problemas ao alterar termos e garantias!</p>";
 					}

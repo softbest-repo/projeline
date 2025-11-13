@@ -126,8 +126,26 @@
 										</p>	
 									</div>
 								</form>
-							</div>
+								<script>
+									var $tg = jQuery.noConflict();
+									$tg('#form-cadastro').on('submit', function(event) {
+										event.preventDefault();
 
+										grecaptcha.ready(function() {
+											grecaptcha.execute('<?php echo $chaveSite; ?>', {action: 'action_form'}).then(function(token) {
+												if ($tg('#token').length === 0) {
+													$tg('#form-cadastro').append('<input type="hidden" id="token" name="token">');
+												}
+												if ($tg('#action').length === 0) {
+													$tg('#form-cadastro').append('<input type="hidden" id="action" name="action" value="action_form">');
+												}
+												$tg('#token').val(token);
+												$tg('#form-cadastro')[0].submit();
+											});
+										});
+									});
+								</script>
+							</div>
 						</div>
 						<br class="clear"/>
 					</div>

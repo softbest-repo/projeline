@@ -657,7 +657,7 @@ body {width:100%; height:100%; overflow-x:hidden;}
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .carrossel-imagens { width: 600px; height: auto; margin: 0 auto; padding: 0; }
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .carrossel-imagens .swiper-wrapper { display: flex;}
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .carrossel-imagens .swiper-slide {width: 100%; height: auto; box-sizing: border-box;}
-#conteudo-interno #conteudo-projetosComplementares-detalhes #outras .slide-container { display: flex; gap: 10px; width: 100%; }
+#conteudo-interno #conteudo-projetosComplementares-detalhes #outras .slide-container { display: flex; gap: 10px; width: 100% ; background: #f9f9f9; }
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .slide-item { flex: 1; min-height: 250px; border-radius: 4px;  overflow: hidden;}
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .slide-image { display: block; width: 100%; height: 100%; background-size: cover; background-position: center; cursor: pointer; transition: transform 0.3s ease; text-decoration: none;}
 #conteudo-interno #conteudo-projetosComplementares-detalhes #outras .slide-image:hover { transform: scale(1.05); }  
