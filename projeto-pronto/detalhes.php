@@ -98,15 +98,67 @@
 
     if($dadosComplementos['codProjetoComplementar'] != ""){
 ?>
-                        <div id="botao-complemento">
-                            <p class="botao"><a href="#projetos-complementares"><i class="fa-regular fa-square-plus"></i> Projeto Complementar</a></p>
-                        </div>
+            <div id="complementos-projeto">
+                <div id="bloco-titulo" style="width: auto; margin-bottom: 20px;  margin-top: 20px;">
+                    <p class="titulo" style=" font-size: 16px">Projetos Complementares</p>
+                    <p class="sub-titulo" style="font-size: 12px; line-height: 100%;">Selecione os projetos complementares que deseja adicionar ao seu projeto.</p>
+                </div>
+                <p id="projetos-complementares" style="position:absolute; margin-top:-230px;"></p>
+                <div id="conteudo-complementos">
+                    <div id="mostra-complementos">
+                        <table id="tabela">
+                            <!-- <tr class="titulo">
+                                <td>Adicionar</td>
+                                <td>Projeto</td>
+                                <td>Preço</td>
+                            </tr> -->
 <?php
-    }else{
-        $margin1 = "margin-top:80px;";
-        $margin2 = "margin-top:85px;";
+        $cont = 0;
+
+        $sqlComplementos = "SELECT * FROM projetosComplementares PC inner join projetosComplementos PC2 on PC.codProjetoComplementar = PC2.codProjetoComplementar WHERE PC2.codProjeto = ".$dadosProjetos['codProjeto']." ORDER BY PC2.codProjetoComplementar ASC";
+        $resultComplementos = $conn->query($sqlComplementos);
+        while($dadosComplementos = $resultComplementos->fetch_assoc()){
+
+            $sqlImagem = "SELECT * FROM projetosComplementaresImagens WHERE codProjetoComplementar = ".$dadosComplementos['codProjetoComplementar']." ORDER BY codProjetoComplementarImagem ASC LIMIT 0,1";
+            $resultImagem = $conn->query($sqlImagem);
+            $dadosImagem = $resultImagem->fetch_assoc();
+            
+            $cont++;
+
+            if($cont == 2){
+                $cont = 0;
+                $background = "background-color:#f5e6e6;";
+            }else{
+                $background = "background-color:#f5f5f5;";
+            }  
+?>
+<tr class="item" style="<?php echo $background; ?>">
+    <td style="border-right:0; width:40px; text-align:center;">
+        <input 
+            type="checkbox" 
+            class="check-complemento"
+            onchange="adicionarAoCarrinho(<?php echo $dadosProjetos['codProjeto']; ?>, <?php echo $dadosComplementos['codProjetoComplementar']; ?>)"
+        >
+    </td>
+
+    <td>
+        <span><?php echo $dadosComplementos['nomeProjetoComplementar']; ?></span>
+    </td>
+
+    <td class="preco">
+        R$ <?php echo number_format($dadosComplementos['precoProjetoComplementar'], 2, ',', '.'); ?>
+    </td>
+</tr>
+<?php
+      }
+?>
+                        </table>
+                    </div>
+                </div>
+            </div>
+<?php
     }
-?>                                         
+?>                                       
                         <p class="descricao" style="<?php echo $margin1;?>">Tem dúvidas? Fale agora mesmo com a gente pelo WhatsApp!</p>
                         <div id="botao-whats">
                             <p class="botao">WhatsApp</p>
@@ -185,62 +237,7 @@
 				});
 			}
 			</script>
-<?php
-    $sqlComplementos = "SELECT * FROM projetosComplementares PC inner join projetosComplementos PC2 on PC.codProjetoComplementar = PC2.codProjetoComplementar WHERE PC2.codProjeto = ".$dadosProjetos['codProjeto']." ORDER BY PC2.codProjetoComplementar ASC LIMIT 0,1";
-    $resultComplementos = $conn->query($sqlComplementos);
-    $dadosComplementos = $resultComplementos->fetch_assoc();
-
-    if($dadosComplementos['codProjetoComplementar'] != ""){
-?>
-            <div id="complementos-projeto">
-                <div id="bloco-titulo">
-                    <p class="titulo">Projetos Complementares</p>
-                    <p class="sub-titulo">Selecione os projetos complementares que deseja adicionar ao seu projeto.</p>
-                </div>
-                <p id="projetos-complementares" style="position:absolute; margin-top:-230px;"></p>
-                <div id="conteudo-complementos">
-                    <div id="mostra-complementos">
-                        <table id="tabela">
-                            <tr class="titulo">
-                                <td style="border-radius:5px 0px 0px 5px;">Projeto</td>
-                                <td>Preço</td>
-                                <td style="border-radius:0px 5px 5px 0px;">Carrinho</td>
-                            </tr>
-<?php
-        $cont = 0;
-
-        $sqlComplementos = "SELECT * FROM projetosComplementares PC inner join projetosComplementos PC2 on PC.codProjetoComplementar = PC2.codProjetoComplementar WHERE PC2.codProjeto = ".$dadosProjetos['codProjeto']." ORDER BY PC2.codProjetoComplementar ASC";
-        $resultComplementos = $conn->query($sqlComplementos);
-        while($dadosComplementos = $resultComplementos->fetch_assoc()){
-
-            $sqlImagem = "SELECT * FROM projetosComplementaresImagens WHERE codProjetoComplementar = ".$dadosComplementos['codProjetoComplementar']." ORDER BY codProjetoComplementarImagem ASC LIMIT 0,1";
-            $resultImagem = $conn->query($sqlImagem);
-            $dadosImagem = $resultImagem->fetch_assoc();
-            
-            $cont++;
-
-            if($cont == 2){
-                $cont = 0;
-                $background = "background-color:#f5e6e6;";
-            }else{
-                $background = "background-color:#f5f5f5;";
-            }  
-?>
-                            <tr class="item" style="<?php echo $background;?>">
-                                <td><span><img src="<?php echo $configUrlGer . 'f/projetosComplementares/' . $dadosImagem['codProjetoComplementar'] . '-' . $dadosImagem['codProjetoComplementarImagem'] . '-O.'.$dadosImagem['extProjetoComplementarImagem']; ?>" alt="" width="100px"></span><span><?php echo $dadosComplementos['nomeProjetoComplementar']; ?></span></td>
-                                <td class="preco">R$ <?php echo number_format($dadosComplementos['precoProjetoComplementar'], 2, ',', '.'); ?></td>
-                                <td class="botao" style="border-right:0;"><button class="botao" onclick="adicionarAoCarrinho(<?php echo $dadosProjetos['codProjeto'];?>, <?php echo $dadosComplementos['codProjetoComplementar'];?>)">Adicionar</button></td>
-                            </tr>
-<?php
-      }
-?>
-                        </table>
-                    </div>
-                </div>
-            </div>
-<?php
-    }
-?>            
+           
             <div id="repete-caracteristicas" <?php if (($dadosProjetos['metragemCProjeto'] == 0 || $dadosProjetos['metragemCProjeto'] == "") && ($dadosProjetos['frenteProjeto'] == 0 || $dadosProjetos['frenteProjeto'] == "") && ($dadosProjetos['fundosProjeto'] == 0 || $dadosProjetos['fundosProjeto'] == "") && ($dadosProjetos['metragemProjeto'] == 0 || $dadosProjetos['metragemProjeto'] == "") && ($dadosProjetos['quartosProjeto'] == 0 || $dadosProjetos['quartosProjeto'] == "") && ($dadosProjetos['suiteProjeto'] == 0 || $dadosProjetos['suiteProjeto'] == "") && ($dadosProjetos['banheirosProjeto'] == 0 || $dadosProjetos['banheirosProjeto'] == "") && ($dadosProjetos['garagemProjeto'] == 0 || $dadosProjetos['garagemProjeto'] == "") ) { echo 'style="display:none;"'; } ?>>
                 <div id="bloco-titulo">
                     <p class="titulo">Características do projeto</p>
