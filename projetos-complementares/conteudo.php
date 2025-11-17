@@ -5,6 +5,37 @@
 
 	<div id="conteudo-projetosComplementares" class="wow animate__animated animate__fadeInUp">
 		<div id="mostra-complementares">
+
+
+			<form action="<?php echo $configUrl;?>projetos-complementares/salva-anexo.php"  method="post" enctype="multipart/form-data" class="form-projetos ">
+				<h2>Envie seu orçamento</h2>
+			<div style="display: flex; justify-content: center ; gap: 15px;">
+				<div style="width: 100%;">
+					<label for="nome">Nome:</label>
+					<div style="display: flex;">
+						<input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+					</div>
+				</div>
+
+				<div style=" width: 100%;">
+					<label for="telefone">Telefone (DDD + número):</label>
+					<div style="display: flex;">
+						<input type="tel" id="telefone" name="telefone" placeholder="(DDD) 99999-9999" required  onKeyDown="Mascara(this,novoTelefone);" onKeyPress="Mascara(this,novoTelefone);" onKeyUp="Mascara(this,novoTelefone);" >
+					</div>
+				</div>
+
+				<div style=" width: 100%;">
+					<label for="anexo">Selecionar anexo:</label>
+					<div style="display: flex;">
+						<input type="file" id="anexo" name="anexo" required>
+					</div>
+				</div>
+
+				<input type="hidden" name="url" value="">
+				<button type="submit">Enviar</button>
+			</div>
+			</form>
+
 			<table id="tabela-complementares">
 				<tr class="titulo">
 					<td style="border-radius:5px 0 0 5px; text-align:center;">Imagem</td>

@@ -85,11 +85,24 @@
                     <div id="bloco-dir">
                         <div id="preco"> <span>R$:</span> <?php echo $numeroFormatado; ?> </div>
                         <div id="parcelado"><?php echo $parcelamento; ?></div>
-<button type="button" id="comprar-btn" onclick="comprarProjeto(<?php echo $dadosProjetos['codProjeto']; ?>)"> COMPRAR PROJETO </button>                        <div id="bloco-cod">                            <p class="cod">
+                        <button type="button" id="comprar-btn" onclick="comprarProjeto(<?php echo $dadosProjetos['codProjeto']; ?>)"> COMPRAR PROJETO </button>   
+                        <div id="bloco-cod">                
+                            <p class="cod">
                                 COD:  <?php echo $dadosProjetos['codigoProjeto']; ?>
                             </p>
                         </div>     
 <?php
+    $codCliente = $_COOKIE['codAprovado'.$cookie] ?? 0;
+    $codProjeto = $dadosProjetos['codProjeto'];
+
+    $compsCarrinho = [];
+
+    $sqlCar = "SELECT codProjetoComplementar FROM carrinho WHERE codCliente = '$codCliente' AND codProjeto = '$codProjeto' AND codProjetoComplementar > 0";
+    $resCar = $conn->query($sqlCar);
+
+    while($d = $resCar->fetch_assoc()){
+        $compsCarrinho[] = $d['codProjetoComplementar'];
+    }
     $sqlComplementos = "SELECT * FROM projetosComplementares PC inner join projetosComplementos PC2 on PC.codProjetoComplementar = PC2.codProjetoComplementar WHERE PC2.codProjeto = ".$dadosProjetos['codProjeto']." ORDER BY PC2.codProjetoComplementar ASC LIMIT 0,1";
     $resultComplementos = $conn->query($sqlComplementos);
     $dadosComplementos = $resultComplementos->fetch_assoc();
@@ -126,7 +139,10 @@
 ?>
                                         <tr class="item" style="<?php echo $background; ?>">
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="check-complemento" value="<?php echo $dadosComplementos['codProjetoComplementar']; ?>">                               
+<?php
+            $checked = in_array($dadosComplementos['codProjetoComplementar'], $compsCarrinho) ? 'checked' : '';
+?>
+                                            <input type="checkbox" class="check-complemento" value="<?php echo $dadosComplementos['codProjetoComplementar']; ?>" <?php echo $checked; ?>>        
                                             </td>
 
                                             <td style=" width: 70%; ">
@@ -162,72 +178,103 @@
                 </div>
             </div>
 			<script>
-function comprarProjeto(codProjeto) {
-    var $tg = jQuery.noConflict();
+                var $tg = jQuery.noConflict();
+                $tg(document).on("change", ".check-complemento", function () {
 
-    // pega complementares marcados
-    var complementares = [];
-    $tg('.check-complemento:checked').each(function () {
-        complementares.push($tg(this).val());
-    });
+                    let codComplemento = $tg(this).val();
+                    let marcado = $tg(this).is(":checked") ? 1 : 0;
 
-    Swal.fire({
-        title: 'Adicionando ao carrinho...',
-        text: 'Aguarde enquanto processamos seu pedido.',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
+                    Swal.fire({
+                        title: marcado ? 'Adicionando complemento...' : 'Removendo complemento...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
 
-            $tg.ajax({
-                url: '<?php echo $configUrl;?>carrinho/salva-carrinho.php',
-                type: 'POST',
-                data: { 
-                    codProjeto: codProjeto, 
-                    complementares: complementares 
-                },
-                dataType: 'json',
-                success: function(response) {
+                            $tg.ajax({
+                                url: '<?php echo $configUrl;?>carrinho/salva-carrinho.php',
+                                type: 'POST',
+                                data: { 
+                                    complementoUnico: codComplemento,
+                                    acao: marcado ? 'add' : 'remove'
+                                },
+                                dataType: 'json',
+                                success: function(response) {
 
-                    if (response.tipo == "carrinho") {
+                                    Swal.fire({
+                                        title: response.success ? 'Sucesso!' : 'Ops!',
+                                        text: response.message,
+                                        icon: response.success ? 'success' : 'info',
+                                        timer: 1800,
+                                        showConfirmButton: false
+                                    });
 
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Sucesso!',
-                                text: response.message,
-                                icon: 'success',
-                                showCancelButton: true,
-                                confirmButtonText: 'Ir para o Carrinho',
-                                cancelButtonText: 'Continuar vendo projetos'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = '<?php echo $configUrl;?>carrinho/';
+                                },
+                                error: function() {
+                                    Swal.fire('Erro!', 'Não foi possível conectar ao servidor.', 'error');
                                 }
                             });
-
-                        } else {
-                            Swal.fire('Ops!', response.message, 'info');
                         }
+                    });
+                });
+                function comprarProjeto(codProjeto) {
+                    var $tg = jQuery.noConflict();
 
-                    } else {
-                        Swal.fire({
-                            title: 'Você precisa estar logado!',
-                            text: response.message,
-                            icon: 'warning',
-                            confirmButtonText: 'Realizar Login'
-                        }).then(() => {
-                            window.location.href = '<?php echo $configUrl;?>minha-conta/login/';
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire('Erro!', 'Não foi possível conectar ao servidor.', 'error');
+                    Swal.fire({
+                        title: 'Adicionando o projeto...',
+                        text: 'Aguarde enquanto processamos.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+
+                            $tg.ajax({
+                                url: '<?php echo $configUrl;?>carrinho/salva-carrinho.php',
+                                type: 'POST',
+                                data: { 
+                                    codProjeto: codProjeto
+                                },
+                                dataType: 'json',
+                                success: function(response) {
+
+                                    if (response.tipo == "carrinho") {
+
+                                        if (response.success) {
+                                            Swal.fire({
+                                                title: 'Projeto adicionado!',
+                                                text: response.message,
+                                                icon: 'success',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Ir para o Carrinho',
+                                                cancelButtonText: 'Continuar vendo'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = '<?php echo $configUrl;?>carrinho/';
+                                                }
+                                            });
+
+                                        } else {
+                                            Swal.fire('Ops!', response.message, 'info');
+                                        }
+
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Você precisa estar logado!',
+                                            text: response.message,
+                                            icon: 'warning',
+                                            confirmButtonText: 'Realizar Login'
+                                        }).then(() => {
+                                            window.location.href = '<?php echo $configUrl;?>minha-conta/login/';
+                                        });
+                                    }
+                                },
+                                error: function() {
+                                    Swal.fire('Erro!', 'Não foi possível conectar ao servidor.', 'error');
+                                }
+                            });
+                        }
+                    });
                 }
-            });
-        }
-    });
-}
+            </script>
 
-			</script>
            
             <div id="repete-caracteristicas" <?php if (($dadosProjetos['metragemCProjeto'] == 0 || $dadosProjetos['metragemCProjeto'] == "") && ($dadosProjetos['frenteProjeto'] == 0 || $dadosProjetos['frenteProjeto'] == "") && ($dadosProjetos['fundosProjeto'] == 0 || $dadosProjetos['fundosProjeto'] == "") && ($dadosProjetos['metragemProjeto'] == 0 || $dadosProjetos['metragemProjeto'] == "") && ($dadosProjetos['quartosProjeto'] == 0 || $dadosProjetos['quartosProjeto'] == "") && ($dadosProjetos['suiteProjeto'] == 0 || $dadosProjetos['suiteProjeto'] == "") && ($dadosProjetos['banheirosProjeto'] == 0 || $dadosProjetos['banheirosProjeto'] == "") && ($dadosProjetos['garagemProjeto'] == 0 || $dadosProjetos['garagemProjeto'] == "") ) { echo 'style="display:none;"'; } ?>>
                 <div id="bloco-titulo">

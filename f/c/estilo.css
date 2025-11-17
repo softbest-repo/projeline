@@ -632,6 +632,19 @@ body {width:100%; height:100%; overflow-x:hidden;}
 #conteudo-interno #conteudo-projetosComplementares #tabela-complementares td img { border-radius: 5px; vertical-align: middle; }
 #conteudo-interno #conteudo-projetosComplementares .botao-vermais { padding: 8px 45px; background: #b07d02; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem; transition: background 0.3s ease; }
 #conteudo-interno #conteudo-projetosComplementares .botao-vermais:hover { background: #c48c0bff;}
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos {  background-color: #fff; color: #001242; padding: 20px 20px; margin-bottom: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);  margin-top: 0; }
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos h2 { text-align: center; color: #b07d02; font-size: 22px;margin-bottom: 18px; margin-bottom: 5px; }
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos label { display: block; font-weight: bold; margin-bottom: 5px;}
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="text"],
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="tel"],
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="file"] { width: 100%; height: 22px;padding: 6px;  border: 1px solid #b07d02; border-radius: 6px; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="text"]:focus,
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="tel"]:focus,
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos input[type="file"]:focus {border-color: #001242; box-shadow: 0 0 5px rgba(0, 18, 66, 0.4); }
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos button[type="submit"] { background-color: #b07d02; margin-top: 20px; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;  width: 44%; transition: all 0.3s; }
+#conteudo-interno #conteudo-projetosComplementares form.form-projetos button[type="submit"]:hover { background-color: #001242; color: #ffffff;  }
+#popup-mensagem { position: fixed; bottom: 20px; right: 20px; background: #109b01de; color: #fff; font-weight: 100;  text-align: center; padding: 10px 25px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);  opacity: 1; transition: opacity 1s ease; z-index: 9999;}
+
 
 
 

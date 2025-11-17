@@ -4,8 +4,6 @@
 	error_reporting(0);
 	ini_set('display_errors', 0);
 
-
-
 	$configServer = "50.116.87.98";
 	$configLogin = "servidor_projeline";
 	$configSenha = "epitafio2025*";

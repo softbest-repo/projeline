@@ -151,7 +151,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="<?php echo $cor1;?>">
 		<meta name="msapplication-navbutton-color" content="<?php echo $cor1;?>">	
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 		
 
 <?php
@@ -171,8 +171,7 @@
 		<link rel="shortcut icon" href="<?php echo $configUrl;?>f/i/icon.png" />
 		<link rel="stylesheet" type="text/css" href="<?php echo $configUrl;?>f/c/estilo.css" media="all" title="Layout padrão" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-		<link rel="stylesheet" href="caminho/para/carrossel-swiper.css">
+
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sora:wght@100..800&display=swap" rel="stylesheet">
@@ -225,8 +224,27 @@
 <?php
 	}
 	
-		
-	if($url[2] != "" ||  $url['2'] == 'projetos-complementares' ){
+	if($url[2] == "projeto-pronto" && $url[3] != '' ||  $url['2'] == 'projetos-complementares'  && $url[3] != ''   )
+		{
+?>		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css" />
+		<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js"></script>
+		<script>
+		lightbox.option({
+		  'resizeDuration': 200,
+		  'wrapAround': true
+		  })
+		</script>
+
+		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.carousel.min.css">
+		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.theme.default.min.css">
+		<script src="<?php echo $configUrl;?>f/j/owlcarousel/jquery.min.js"></script>
+		<script src="<?php echo $configUrl;?>f/j/owlcarousel/owl.carousel.js"></script>	
+<?php
+	}else
+	if($url[2] != "" ||  $url['2'] == 'projetos-personalizados' ){
 ?>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css" />
 		<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
@@ -243,29 +261,7 @@
 		<script src="<?php echo $configUrl;?>f/j/owlcarousel/jquery.min.js"></script>
 		<script src="<?php echo $configUrl;?>f/j/owlcarousel/owl.carousel.js"></script>	
 <?php	
-	}
-
-	
-	if($url[2] == "terrenos" && $url[3] != "" || $url[2] == "casas" && $url[3] != "" || $url[2] == "loteamentos" && $url[3] != "" || $url[2] == "residenciais" && $url[3] != ""){
-?>		
-		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.carousel.min.css">
-		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.theme.default.min.css">
-		<script src="<?php echo $configUrl;?>f/j/owlcarousel/jquery.min.js"></script>
-		<script src="<?php echo $configUrl;?>f/j/owlcarousel/owl.carousel.js"></script>	
-<?php
 	}else
-	if($url[2] == "" || $url[2] == "balneario-gaivota"){	
-?>
-		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.carousel.min.css">
-		<link rel="stylesheet" href="<?php echo $configUrl;?>f/j/owlcarousel/assets/owl.theme.default.min.css">
-		<script src="<?php echo $configUrl;?>f/j/owlcarousel/jquery.min.js"></script>
-		<script src="<?php echo $configUrl;?>f/j/owlcarousel/owl.carousel.js"></script>					
-<?php
-	}
-?>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>	
-<?php
 	if($url[2] != "projeto-pronto"){
 		
 ?>
@@ -465,8 +461,17 @@ if($url[2] == "projeto-pronto" && is_numeric($quebraUrl[0]) && !is_numeric($url[
 				new WOW().init();
 			</script>			
 		</div>
+<?php 
+			
+	if($url[2] == "projeto-pronto" && $url[3] != ''  ||  $url['2'] == 'projetos-complementares'  && $url[3] != '' ||  $url['2'] == 'projetos-personalizados'  && $url[3] != ''  )
+		{
+			echo "aqui";
+?>		
 		<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 		<script src="caminho/para/carrossel-swiper.js"></script>
+<?php
+	}
+?>
 	</body>
 </html>
 <?php

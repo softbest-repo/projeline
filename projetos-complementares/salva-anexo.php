@@ -9,10 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $telefone = $_POST['telefone'];
     $url = $_POST['url'];
+    $quebraUrl = explode('-', $url);
 
     if (isset($_FILES['anexo']) && $_FILES['anexo']['error'] === 0) {
 
-        $sql = "INSERT INTO orcamentos (nomeOrcamento, telefoneOrcamento, statusOrcamento, urlOrcamento) VALUES ('".$nome."', '".$telefone."', 'T', '".$urlOrcamento."')";
+        $sql = "INSERT INTO orcamentos (codProjetoComplementar, nomeOrcamento, telefoneOrcamento, respondidoOrcamento, statusOrcamento, urlOrcamento) VALUES ('".$quebraUrl[0]."','".$nome."', '".$telefone."','F' , 'T', '".$urlOrcamento."')";
         $result = $conn->query($sql);
 
         if($result){

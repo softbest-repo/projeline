@@ -140,6 +140,7 @@
 							<tr class="titulo-tabela" border="none">
 								<th class="canto-esq">Nome</th>
 								<th>Telefone</th>
+								<th style=" line-height: 97%;">Orçamento <br> respondido?</th>
 								<th>Anexo</th>
 								<th>Status</th>
 								<th>Alterar</th>
@@ -148,12 +149,12 @@
 <?php
 					if($url[5] == 1 || $url[5] == ""){
 						$pagina = 1;
-						$sqlOrcamento = "SELECT * FROM orcamentos ORDER BY statusOrcamento ASC LIMIT 0,30";
+						$sqlOrcamento = "SELECT * FROM orcamentos ORDER BY statusOrcamento ASC, respondidoOrcamento DESC LIMIT 0,30";
 					}else{
 						$pagina = $url[5];
 						$paginaFinal = $pagina * 30;
 						$paginaInicial = $paginaFinal - 30;
-						$sqlOrcamento = "SELECT * FROM orcamentos ORDER BY statusOrcamento ASC LIMIT ".$paginaInicial.",30";
+						$sqlOrcamento = "SELECT * FROM orcamentos ORDER BY statusOrcamento ASC respondidoOrcamento DESC LIMIT ".$paginaInicial.",30";
 					}		
 
 					$resultOrcamento = $conn->query($sqlOrcamento);
@@ -173,11 +174,15 @@
 						$sqlImagem = "SELECT * FROM orcamentosAnexos WHERE codOrcamento = ".$dadosOrcamento['codOrcamento']." ORDER BY codOrcamentoAnexo ASC LIMIT 0,1";
 						$resultImagem = $conn->query($sqlImagem);
 						$dadosImagem = $resultImagem->fetch_assoc();
-						
+
 ?>
 								<tr class="tr">
 									<td class="oitenta"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['nomeOrcamento'];?></a></td>
-									<td class="oitenta"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['telefoneOrcamento'];?></a></td>
+									<td class="oitenta" style=" text-align: center;"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['telefoneOrcamento'];?></a></td>
+									<td class="vinte" style="text-align: center;">
+										<label><input type="radio"  class="radio-respondido"  name="respondido_<?php echo $dadosOrcamento['codOrcamento']; ?>"  value="T"  data-cod-orcamento="<?php echo $dadosOrcamento['codOrcamento']; ?>" <?php echo ($dadosOrcamento['respondidoOrcamento'] == 'T') ? 'checked' : ''; ?>> Sim </label>
+										<label> <input type="radio"  class="radio-respondido" name="respondido_<?php echo $dadosOrcamento['codOrcamento']; ?>"  value="F"  data-cod-orcamento="<?php echo $dadosOrcamento['codOrcamento']; ?>" <?php echo ($dadosOrcamento['respondidoOrcamento'] == 'F') ? 'checked' : ''; ?>> Não </label>
+									</td>						
 									<td class="botoes" style="width:5%; display:flex; jusify"> <a style="padding:0px; display:block" href="<?php echo $configUrl; ?>atendimento/orcamentos/anexos/<?php echo $dadosOrcamento['codOrcamento']; ?>/" title="Gerenciar PDF do orçamento <?php echo $dadosOrcamento['nomeOrcamento']; ?>"> <img style=" margin-top: 10px;" src="<?php echo $configUrl; ?>f/i/icone-pdf.png"  alt="ícone PDF"  height="40"> </a> </td>
 									<td class="botoes"><a href='<?php echo $configUrl; ?>atendimento/orcamentos/ativacao/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Deseja <?php echo $statusPergunta ?> o integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>?' ><img src="<?php echo $configUrl; ?>f/i/default/corpo-default/<?php echo $status ?>.gif" alt="icone"></a></td>
 									<td class="botoes"><a href='<?php echo $configUrl; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Deseja alterar o integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>?' ><img src="<?php echo $configUrl;?>f/i/default/corpo-default/icones-alterar.gif" alt="icone" /></a></td>
@@ -206,7 +211,42 @@
 											$po("#codOrdena"+cod).css("border", "1px solid #0000FF");
 										});											
 									}
-								</script>								 
+								</script>
+								<script>
+									var $tg = jQuery.noConflict();
+
+									$tg(document).ready(function() {
+										$tg(document).on('change', '.radio-respondido', function() {
+											var codOrcamento = $tg(this).data('cod-orcamento');
+											var valorRespondido = $tg(this).val();
+											
+											console.log('Atualizando orçamento:', codOrcamento, 'para:', valorRespondido);
+											
+											$tg.ajax({
+												url: '<?php echo $configUrlGer; ?>atendimento/orcamentos/atualizar-respondido.php',
+												type: 'POST',
+												data: {
+													codOrcamento: codOrcamento,
+													respondido: valorRespondido
+												},
+												dataType: 'json',
+												success: function(response) {
+													if (response.success) {
+														console.log('✓ Atualizado com sucesso!');
+													} else {
+														console.error('Erro:', response.message);
+														alert('Erro ao atualizar: ' + response.message);
+													}
+												},
+												error: function(xhr, status, error) {
+													console.error('Erro AJAX:', error);
+													alert('Erro ao conectar com o servidor.');
+												}
+											});
+										});
+									});
+								</script>
+								 
 							</table>	
 <?php
 				}
