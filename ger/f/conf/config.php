@@ -1,8 +1,9 @@
 <?php
-	$configServer = "localhost";
-	$configLogin = "root";
-	$configSenha = "epitafio";
-	$configBaseDados = "projeline";	
+
+	$configServer = "50.116.87.98";
+	$configLogin = "servidor_projeline";
+	$configSenha = "epitafio2025*";
+	$configBaseDados = "servidor_projeline";	
 	
 	$conn = new mysqli($configServer, $configLogin, $configSenha, $configBaseDados);
 
@@ -12,10 +13,10 @@
 
 	$sqlSession = "SET SESSION sql_mode = ''";
 	$resultSession = $conn->query($sqlSession);
-	
-	$configUrl = "http://192.168.1.200/projeline/ger/";
-	$configUrlGer = "http://192.168.1.200/projeline/ger/";
-	$configUrlSite = "http://192.168.1.200/projeline/";
+
+	$configUrl = "http://".$_SERVER['HTTP_HOST']."/projeline/ger/";
+	$configUrlGer = "http://".$_SERVER['HTTP_HOST']."/projeline/ger/";
+	$configUrlSeg = "http://".$_SERVER['HTTP_HOST']."/projeline/";
 
 	$cookie = "projeline";
 	$configLimite = 10;

@@ -1,12 +1,19 @@
 <?php
-	$configUrl = "http://192.168.1.200/projeline/";
-	$configUrlSeg = "http://192.168.1.200/projeline_m/";
-	$configUrlGer = "http://192.168.1.200/projeline/ger/";
 
-	$configServer = "localhost";
-	$configLogin = "root";
-	$configSenha = "epitafio";
-	$configBaseDados = "projeline";
+
+	error_reporting(0);
+	ini_set('display_errors', 0);
+
+
+
+	$configServer = "50.116.87.98";
+	$configLogin = "servidor_projeline";
+	$configSenha = "epitafio2025*";
+	$configBaseDados = "servidor_projeline";	
+
+	$configUrl = "http://".$_SERVER['HTTP_HOST']."/projeline/";
+	$configUrlSeg = "http://".$_SERVER['HTTP_HOST']."/projeline_m/";
+	$configUrlGer = "http://".$_SERVER['HTTP_HOST']."/projeline/ger/";
 
 	$conn = new mysqli($configServer, $configLogin, $configSenha, $configBaseDados);
 	$conn->set_charset("utf8mb4");
