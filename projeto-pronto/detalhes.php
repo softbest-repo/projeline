@@ -85,9 +85,7 @@
                     <div id="bloco-dir">
                         <div id="preco"> <span>R$:</span> <?php echo $numeroFormatado; ?> </div>
                         <div id="parcelado"><?php echo $parcelamento; ?></div>
-						<button type="submit" id="comprar-btn" onclick="adicionarAoCarrinho(<?php echo $dadosProjetos['codProjeto'];?>, 0)" name="comprar">COMPRAR PROJETO</button>
-                        <div id="bloco-cod">
-                            <p class="cod">
+<button type="button" id="comprar-btn" onclick="comprarProjeto(<?php echo $dadosProjetos['codProjeto']; ?>)"> COMPRAR PROJETO </button>                        <div id="bloco-cod">                            <p class="cod">
                                 COD:  <?php echo $dadosProjetos['codigoProjeto']; ?>
                             </p>
                         </div>     
@@ -98,20 +96,14 @@
 
     if($dadosComplementos['codProjetoComplementar'] != ""){
 ?>
-            <div id="complementos-projeto">
-                <div id="bloco-titulo" style="width: auto; margin-bottom: 20px;  margin-top: 20px;">
-                    <p class="titulo" style=" font-size: 16px">Projetos Complementares</p>
-                    <p class="sub-titulo" style="font-size: 12px; line-height: 100%;">Selecione os projetos complementares que deseja adicionar ao seu projeto.</p>
-                </div>
-                <p id="projetos-complementares" style="position:absolute; margin-top:-230px;"></p>
-                <div id="conteudo-complementos">
-                    <div id="mostra-complementos">
-                        <table id="tabela">
-                            <!-- <tr class="titulo">
-                                <td>Adicionar</td>
-                                <td>Projeto</td>
-                                <td>Preço</td>
-                            </tr> -->
+                        <div id="complementos-projeto">
+                            <div id="bloco-titulo" style="width: auto; margin-bottom: 10px;  margin-top: 15px; padding: 10px 20px; border-radius: 5px; background: #001242;">
+                                <p class="titulo" style=" font-size: 15px; color: white;">Projetos Complementares</p>
+                            </div>
+                            <p id="projetos-complementares" style="position:absolute; margin-top:-230px;"></p>
+                            <div id="conteudo-complementos">
+                                <div id="mostra-complementos">
+                                    <table id="tabela">
 <?php
         $cont = 0;
 
@@ -132,110 +124,109 @@
                 $background = "background-color:#f5f5f5;";
             }  
 ?>
-<tr class="item" style="<?php echo $background; ?>">
-    <td style="border-right:0; width:40px; text-align:center;">
-        <input 
-            type="checkbox" 
-            class="check-complemento"
-            onchange="adicionarAoCarrinho(<?php echo $dadosProjetos['codProjeto']; ?>, <?php echo $dadosComplementos['codProjetoComplementar']; ?>)"
-        >
-    </td>
+                                        <tr class="item" style="<?php echo $background; ?>">
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="check-complemento" value="<?php echo $dadosComplementos['codProjetoComplementar']; ?>">                               
+                                            </td>
 
-    <td>
-        <span><?php echo $dadosComplementos['nomeProjetoComplementar']; ?></span>
-    </td>
+                                            <td style=" width: 70%; ">
+                                                <span><?php echo $dadosComplementos['nomeProjetoComplementar']; ?></span>
+                                            </td>
 
-    <td class="preco">
-        R$ <?php echo number_format($dadosComplementos['precoProjetoComplementar'], 2, ',', '.'); ?>
-    </td>
-</tr>
+                                            <td class="preco" style="width: 30%">
+                                                R$ <?php echo number_format($dadosComplementos['precoProjetoComplementar'], 2, ',', '.'); ?>
+                                            </td>
+                                        </tr>
 <?php
       }
 ?>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 <?php
     }
-?>                                       
-                        <p class="descricao" style="<?php echo $margin1;?>">Tem dúvidas? Fale agora mesmo com a gente pelo WhatsApp!</p>
+    if(isset($_COOKIE['codAprovado'.$cookie])){
+        $linkUrl = "carrinho/";
+    }else{
+        $linkUrl = "minha-conta/login/";
+    }
+?>                   					
+                        <div id="mostra-carrinho">
+                            <a href="<?php echo $configUrl.$linkUrl; ?>" title="Confira seu carrinho." alt=""> <div id="carrinho">Ir para carrinho</div></a>
+                        </div>                    
                         <div id="botao-whats">
-                            <p class="botao">WhatsApp</p>
-                        </div>
-                        <div id="compra-segura" style="<?php echo $margin2;?>">
-                            <p class="titulo">Compra Segura.</p>
-                            <img src="<?php echo $configUrl.'f/i/quebrado/bancos.png' ?>"width =  "100%"; alt="bancos">
+                            <p class="botao">Tire suas dúvidas com um  <br> consultor pelo WhatsApp!</p>
                         </div>
                     </div>
                 </div>
             </div>
 			<script>
-			function adicionarAoCarrinho(codProjeto, codProjetoComplementar) {
-				var $tg = jQuery.noConflict();
-				Swal.fire({
-					title: 'Adicionando ao carrinho...',
-					text: 'Aguarde enquanto processamos seu pedido.',
-					allowOutsideClick: false,
-					didOpen: () => {
-						Swal.showLoading();
-						
-						$tg.ajax({
-							url: '<?php echo $configUrl;?>carrinho/salva-carrinho.php',
-							type: 'POST',
-							data: { codProjeto: codProjeto, codProjetoComplementar: codProjetoComplementar },
-							dataType: 'json',
-							success: function(response) {
-								if(response.tipo == "carrinho"){
-									if (response.success) {
-										Swal.fire({
-											title: 'Sucesso!',
-											text: response.message,
-											icon: 'success',
-											showCancelButton: true,
-											confirmButtonText: 'Ir para o Carrinho',
-											cancelButtonText: 'Adicionar mais projetos'
-										}).then((result) => {
-											if (result.isConfirmed) {
-												window.location.href = '<?php echo $configUrl;?>carrinho/';
-											}
-										});
-									} else {
-										Swal.fire({
-											title: 'Ops!',
-											text: response.message,
-											icon: 'info',
-											showCancelButton: true,
-											confirmButtonText: 'Ir para o Carrinho',
-											cancelButtonText: 'Fechar'
-										}).then((result) => {
-											if (result.isConfirmed) {
-												window.location.href = '<?php echo $configUrl;?>carrinho/';
-											}
-										});
-									}
-								}else{
-									Swal.fire({
-										title: 'Opa, você precisa estar logado!',
-										text: response.message,
-										icon: 'warning',
-										showCancelButton: true,
-										confirmButtonText: 'Realizar Login',
-										cancelButtonText: 'Cancelar'
-									}).then((result) => {
-										if (result.isConfirmed) {
-											window.location.href = '<?php echo $configUrl;?>minha-conta/login/';
-										}
-									});									
-								}
-							},
-							error: function() {
-								Swal.fire('Erro!', 'Não foi possível conectar ao servidor.', 'error');
-							}
-						});
-					}
-				});
-			}
+function comprarProjeto(codProjeto) {
+    var $tg = jQuery.noConflict();
+
+    // pega complementares marcados
+    var complementares = [];
+    $tg('.check-complemento:checked').each(function () {
+        complementares.push($tg(this).val());
+    });
+
+    Swal.fire({
+        title: 'Adicionando ao carrinho...',
+        text: 'Aguarde enquanto processamos seu pedido.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+
+            $tg.ajax({
+                url: '<?php echo $configUrl;?>carrinho/salva-carrinho.php',
+                type: 'POST',
+                data: { 
+                    codProjeto: codProjeto, 
+                    complementares: complementares 
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    if (response.tipo == "carrinho") {
+
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Sucesso!',
+                                text: response.message,
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ir para o Carrinho',
+                                cancelButtonText: 'Continuar vendo projetos'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '<?php echo $configUrl;?>carrinho/';
+                                }
+                            });
+
+                        } else {
+                            Swal.fire('Ops!', response.message, 'info');
+                        }
+
+                    } else {
+                        Swal.fire({
+                            title: 'Você precisa estar logado!',
+                            text: response.message,
+                            icon: 'warning',
+                            confirmButtonText: 'Realizar Login'
+                        }).then(() => {
+                            window.location.href = '<?php echo $configUrl;?>minha-conta/login/';
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire('Erro!', 'Não foi possível conectar ao servidor.', 'error');
+                }
+            });
+        }
+    });
+}
+
 			</script>
            
             <div id="repete-caracteristicas" <?php if (($dadosProjetos['metragemCProjeto'] == 0 || $dadosProjetos['metragemCProjeto'] == "") && ($dadosProjetos['frenteProjeto'] == 0 || $dadosProjetos['frenteProjeto'] == "") && ($dadosProjetos['fundosProjeto'] == 0 || $dadosProjetos['fundosProjeto'] == "") && ($dadosProjetos['metragemProjeto'] == 0 || $dadosProjetos['metragemProjeto'] == "") && ($dadosProjetos['quartosProjeto'] == 0 || $dadosProjetos['quartosProjeto'] == "") && ($dadosProjetos['suiteProjeto'] == 0 || $dadosProjetos['suiteProjeto'] == "") && ($dadosProjetos['banheirosProjeto'] == 0 || $dadosProjetos['banheirosProjeto'] == "") && ($dadosProjetos['garagemProjeto'] == 0 || $dadosProjetos['garagemProjeto'] == "") ) { echo 'style="display:none;"'; } ?>>
