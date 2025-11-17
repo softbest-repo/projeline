@@ -465,7 +465,6 @@ if($url[2] == "projeto-pronto" && is_numeric($quebraUrl[0]) && !is_numeric($url[
 			
 	if($url[2] == "projeto-pronto" && $url[3] != ''  ||  $url['2'] == 'projetos-complementares'  && $url[3] != '' ||  $url['2'] == 'projetos-personalizados'  && $url[3] != ''  )
 		{
-			echo "aqui";
 ?>		
 		<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 		<script src="caminho/para/carrossel-swiper.js"></script>
