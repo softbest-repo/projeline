@@ -139,6 +139,7 @@
 						<table class="tabela-menus" >
 							<tr class="titulo-tabela" border="none">
 								<th class="canto-esq">Nome</th>
+								<th >Projeto</th>
 								<th>Telefone</th>
 								<th style=" line-height: 97%;">Orçamento <br> respondido?</th>
 								<th>Anexo</th>
@@ -171,6 +172,17 @@
 							$statusPergunta = "ativar";
 						}
 
+						$sqlProjeto =  "SELECT * FROM projetosComplementares WHERE codProjetoComplementar = ".$dadosOrcamento['codProjetoComplementar'];
+						$resultProjeto =  $conn->query($sqlProjeto);
+						$dadosProjeto = $resultProjeto->fetch_assoc();
+
+
+						if($dadosProjeto['nomeProjetoComplementar'] == ''){
+							$nomeProjeto = '--';
+						}else{
+							$nomeProjeto = $dadosProjeto['nomeProjetoComplementar'];
+						}
+
 						$sqlImagem = "SELECT * FROM orcamentosAnexos WHERE codOrcamento = ".$dadosOrcamento['codOrcamento']." ORDER BY codOrcamentoAnexo ASC LIMIT 0,1";
 						$resultImagem = $conn->query($sqlImagem);
 						$dadosImagem = $resultImagem->fetch_assoc();
@@ -178,7 +190,8 @@
 ?>
 								<tr class="tr">
 									<td class="oitenta"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['nomeOrcamento'];?></a></td>
-									<td class="oitenta" style=" text-align: center;"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['telefoneOrcamento'];?></a></td>
+									<td class="oitenta"  style=" text-align: center;"><a href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $nomeProjeto;?></a></td>
+									<td class="oitenta" style=" text-align: center;"><a style="width: 120px; display: block;" href='<?php echo $configUrlGer; ?>atendimento/orcamentos/alterar/<?php echo $dadosOrcamento['codOrcamento'] ?>/' title='Veja os detalhes do integrante da orcamentos <?php echo $dadosOrcamento['nomeOrcamento'] ?>'><?php echo $dadosOrcamento['telefoneOrcamento'];?></a></td>
 									<td class="vinte" style="text-align: center;">
 										<label><input type="radio"  class="radio-respondido"  name="respondido_<?php echo $dadosOrcamento['codOrcamento']; ?>"  value="T"  data-cod-orcamento="<?php echo $dadosOrcamento['codOrcamento']; ?>" <?php echo ($dadosOrcamento['respondidoOrcamento'] == 'T') ? 'checked' : ''; ?>> Sim </label>
 										<label> <input type="radio"  class="radio-respondido" name="respondido_<?php echo $dadosOrcamento['codOrcamento']; ?>"  value="F"  data-cod-orcamento="<?php echo $dadosOrcamento['codOrcamento']; ?>" <?php echo ($dadosOrcamento['respondidoOrcamento'] == 'F') ? 'checked' : ''; ?>> Não </label>
